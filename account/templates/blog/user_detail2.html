@@ -1,0 +1,13 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block content %}
+        {% if user.profile_pic != null and user.profile_pic != blank and user.profile_pic != "" %}
+            <img src='{{ MEDIA_URL }}{{user.profile_pic.thumbnail}}' class = 'profile-image-info'>
+        {% endif %}
+        <p>{{ user.username }}, {{ user.email }}, {{ user.date_of_birth }}</p>
+        {{ user.bio }}<br><br>
+        <a href="http://127.0.0.1:8000/{{ user.username }}">My Posts</a> 
+        <a href="{% url 'edit_user' %}">Change Info</a><br> 
+        <a href="{% url 'edit_password' %}">Chage Password</a><br>
+{% endblock %}

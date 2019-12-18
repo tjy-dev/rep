@@ -1,0 +1,30 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block content %}
+        {% if user.profile_pic != null and user.profile_pic != blank and user.profile_pic != "" %}
+            <img src='{{ MEDIA_URL }}{{user.profile_pic.thumbnail}}' class = 'profile-image-info'>
+        {% endif %}
+        <p>{{ user.username }}, {{ user.email }}, {{ user.date_of_birth }}</p>
+        {{ user.bio }}<br><br>
+        <a href="{% url 'edit_user' %}">Change Info</a><br> 
+        <a href="{% url 'edit_password' %}">Chage Password</a><br>
+
+    {% for post in posts %}
+    <div class="post-container">
+        <div class="post-title-container">
+            <a href="{% url 'post_detail' pk=post.pk %}" class="post-title">{{ post.title }}</a>
+        </div>
+        {% if post.picture != null and post.picture != blank and post.picture != "" %}
+            <img src='{{ MEDIA_URL }}{{post.picture}}' class="post-image">
+        {% endif %}
+
+        <p class="post-text">
+            {{ post.text|linebreaksbr }}
+        </p>
+        <div class="post-date">
+            {{ post.published_date }}
+        </div>
+    </div>
+    {% endfor %}
+{% endblock %}

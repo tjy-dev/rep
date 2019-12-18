@@ -1,0 +1,23 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block content %}
+     {% for post in posts %}
+     <div class="post-container">
+         <div class="post-title-container">
+             <a href="{% url 'post_detail' pk=post.pk %}" class="post-title">{{ post.title }}</a>
+         </div>
+
+         {% if post.picture != null and post.picture != blank and post.picture != "" %}
+             <img src='{{ MEDIA_URL }}{{post.picture}}' class="post-image">
+         {% endif %}
+
+         <p class="post-text">
+             {{ post.text|linebreaksbr }}
+         </p>
+         <div class="post-date">
+             {{ post.published_date }}
+         </div>
+     </div>
+    {% endfor %}
+{% endblock %}
