@@ -4,11 +4,8 @@
 {% block content %}
      {% for post in posts %}
      <div class="post-container">
-         <div class="post-account-container">
-            <a href="{% url 'user_post_list' username=post.author.username %}">
-                <img class="post_profile_pic" src="{{MEDIA_URL}}{{post.author.profile_pic.thumbnail}}">
-                <a class="post-account" href="{% url 'user_post_list' username=post.author.username %}">{{ post.author.username}}</a>
-            </a>
+         <div class="post-title-container">
+             <a href="{% url 'post_detail' pk=post.pk %}" class="post-title">{{ post.title }}</a>
          </div>
 
          {% if post.picture != null and post.picture != blank and post.picture != "" %}
@@ -21,7 +18,6 @@
          <div class="post-date">
              {{ post.published_date }}
          </div>
-         <a class="post-clicklayer" href="{% url 'post_detail' pk=post.pk %}"></a>
      </div>
     {% endfor %}
 {% endblock %}

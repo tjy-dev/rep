@@ -21,5 +21,43 @@
         {% endif %}
         <p>written by {{ post.author }}</p>
         <p>{{ post.text|linebreaksbr }}</p>
+
+        <!--<form method="POST" action="{% url 'post_detail' pk=post.pk %}" class="post-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="save btn btn-default">Like</button>
+        </form>-->
+
+        <form name="name_form" action="{% url 'post_like' pk=post.pk %}" method="POST">
+            {% csrf_token %}
+            {% if is_like == 1 %}
+                <input id="like" class="on like_button" type="submit" value=""> 
+            {% else %}
+                <input id="like" class="like_button" type="submit" value=""> 
+            {% endif %}
+        </form>
+        <div id="id_div_ajax_response"></div>
     </div>
+    <script>
+        $("form").submit( function(event) {
+            event.preventDefault();
+            var form = $(this);
+            $.ajax({
+              url: form.prop("action"),
+              method: form.prop("method"),
+              data: form.serialize(),
+              timeout: 10000,
+              dataType: "json",
+            })
+            .done( function(data) {
+              //alert("done");
+              if (data.like == true){
+                $('#like').addClass('on')
+              }else{
+                $('#like').removeClass('on')
+              }
+              $("#id_div_ajax_response").text(data.text);
+            })
+        });
+    </script>
 {% endblock %}

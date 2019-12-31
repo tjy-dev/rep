@@ -1,0 +1,48 @@
+{% load static %}
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>ベータ版</title>
+        <link rel="stylesheet" href="{% static 'css/blog.css' %}">
+    </head>
+    <body>
+        <div class="header-container">
+            <a href="/" class="header-logo">似非Facebook</a>
+        </div>
+        <div class="line-container">
+            <div>
+                <div class="normal-container">
+                    {% if user.is_authenticated %}
+                    <span class="big-message">Hello {{ user.username }} 
+                        {% if user.profile_pic != null and user.profile_pic != blank and user.profile_pic != "" %}
+                        <a href="{% url 'user_post_list' username=user.username %}"><img src='{{ MEDIA_URL }}{{user.profile_pic.thumbnail}}' class="profile-image"></a>
+                        {% endif %}
+                        <div class="small-link">
+                            <a href="{% url 'logout' %}">Log out</a>
+                        </div>
+                    </span>
+
+                    {% else %}
+                     <span class="big-message">
+                        <div class="small-link">
+                            <a href="{% url 'login' %}">Log in</a>
+                        </div>
+                        <div class="small-link">
+                            <a href="{% url 'signup' %}">Sign up</a>
+                        </div>
+                    </span>
+                    {% endif %}
+                </div>
+                {% if user.is_authenticated %}
+                <div class="button-container">
+                    <a href="{% url 'post_new' %}" class="button">New Post</a>
+                </div>
+                {% endif %}
+                </div>
+            <div>
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </body>
+</html>

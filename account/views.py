@@ -2,9 +2,16 @@ from django.shortcuts import render
 from django.utils import timezone
 from .models import Post
 from .models import User
+from .models import Follow
+from .models import Like
+from django.db.models import Q
 from .forms import PostForm
 from django.shortcuts import redirect
+#from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse
+
 import os
 
 def user_post_list(request,username):
@@ -16,15 +23,62 @@ def user_post_list(request,username):
         return render(request, 'blog/user_post_list.html', {'posts': posts,'person':person})
 
 def post_list(request):
-    posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
+    #following = Follow.objects.filter(follower=request.user)
+    #a = []
+    #for f in following:
+    #    a.append(f.following)
+    posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')#.filter(Q(author__in=a) | Q(author=request.user))
     return render(request, 'blog/post_list.html', {'posts': posts})
 
-from django.shortcuts import render, get_object_or_404
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     abc = post.author.id
     abcd = request.user.id
-    return render(request, 'blog/post_detail.html', {'post': post,'abc': abc,'abcd':abcd})
+    is_like = Like.objects.filter(user=request.user).filter(post=post).count()
+    return render(request, 'blog/post_detail.html', {'post': post,'abc': abc,'abcd':abcd,'is_like':is_like})
+
+from django.http.response import JsonResponse
+
+@login_required
+def post_like(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    is_like = Like.objects.filter(user=request.user).filter(post=post).count()
+    print("islike!! = ")
+    print(is_like)
+    if is_like == 0:
+        like = Like()
+        like.user = request.user
+        like.post = post
+        like.published_date = timezone.now()
+        like.save()
+        is_like = 1
+    else:
+        like = Like.objects.filter(user=request.user).filter(post=post)
+        like.delete()
+        is_like = 0
+    hoge = {
+        'like': is_like,
+        'text': "",
+    }
+    return JsonResponse(hoge)
+
+@login_required
+def user_follow(request,username):
+    person = get_object_or_404(User, username=username)
+    is_follow = Follow.objects.filter(follower=request.user).filter(following=person).count()
+    if person == request.user:
+        return redirect('post_list')#error
+    else:
+        if is_follow == 0:
+            follow = Follow()
+            follow.follower = request.user
+            follow.following = person
+            follow.created_date = timezone.now()
+            follow.save()
+        else:
+            follow = Follow.objects.filter(follower=request.user).filter(following=person)
+            follow.delete()
+        return redirect('post_list')
 
 @login_required
 def post_new(request):
@@ -165,12 +219,6 @@ class user_create_complete(generic.TemplateView):
 
 #########################################################################
 
-#Not using this
-@login_required
-def account_detail(request):
-    return render(request, 'blog/user_detail.html')
-
-
 from django.views.generic.edit import UpdateView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -186,7 +234,7 @@ class user_edit(OnlyYouMixin,UpdateView):
     model = User
     template_name = 'registration/edituser.html'
     fields = ['username','email','bio','profile_pic']
-    success_url = reverse_lazy('user_detail')
+    success_url = reverse_lazy('post_list')
 
     def get_object(self):
         # ログイン中のユーザーで検索することを明示する
@@ -199,5 +247,5 @@ from .forms import MyPasswordChangeForm
 class password_change(OnlyYouMixin,PasswordChangeView):
     """パスワード変更ビュー"""
     form_class = MyPasswordChangeForm
-    success_url = reverse_lazy('user_detail')
+    success_url = reverse_lazy('post_list')
     template_name = 'registration/edit_password.html'

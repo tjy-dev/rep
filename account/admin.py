@@ -2,10 +2,12 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import User
 from .models import Post
+from .models import Like
+from .models import Follow
+
 from django.contrib.auth.models import Group
 
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
-#from django.utils.translation import ugettext_lazy as _
 
 class MyUserChangeForm(UserChangeForm):
     class Meta:
@@ -43,4 +45,6 @@ class MyUserAdmin(UserAdmin):
 
 admin.site.register(User,MyUserAdmin)
 admin.site.register(Post)
+admin.site.register(Like)
+admin.site.register(Follow)
 admin.site.unregister(Group)

@@ -7,9 +7,9 @@ urlpatterns = [
     path('post/new/', views.post_new, name='post_new'),
     path('post/<int:pk>/edit/', views.post_edit, name='post_edit'),
     path('post/<pk>/remove/', views.post_remove, name='post_remove'),
+    path('post/<pk>/like/', views.post_like, name='post_like'),
 
     
-    #path('user/settings/personal-info/', views.account_detail, name='user_detail'),####
     path('user/settings/edit/', views.user_edit.as_view(), name='edit_user'),
     path('user/settings/password/', views.password_change.as_view(), name='edit_password'),
 
@@ -17,7 +17,8 @@ urlpatterns = [
     path('accounts/done', views.user_create_temp.as_view(), name='user_create_done'),
     path('accounts/complete/<token>/', views.user_create_complete.as_view(), name='user_create_complete'),
 
-    path('<username>',views.user_post_list,name='user_post_ist'),
+    path('<username>',views.user_post_list,name='user_post_list'),
+    path('<username>/follow',views.user_follow,name='user_follow'),
     #path('accounts/signup/', views.SignUp.as_view(), name='signup')
 ]
 

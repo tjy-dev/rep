@@ -60,7 +60,7 @@ def delete_previous_file(function):
 
 class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200,null=True,blank=True)
     text = models.TextField()
     created_date = models.DateTimeField(default=timezone.now)
     published_date = models.DateTimeField(blank=True, null=True)
@@ -70,7 +70,7 @@ class Post(models.Model):
         self.published_date = timezone.now()
         self.save()
     
-    @delete_previous_file#
+    @delete_previous_file
     def save(self, *args, **kwargs):
         self.published_date = timezone.now()
         super(Post, self).save(*args, **kwargs)
@@ -82,8 +82,15 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
-#class Like(models.Model):
+class Like(models.Model):
+    post = models.ForeignKey(Post,on_delete=models.CASCADE,null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=True)
+    created_date = models.DateTimeField(blank=True,null=True)
 
+class Follow(models.Model):
+    follower = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='follower',null=True)
+    following = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='following',null=True)
+    created_date = models.DateTimeField(blank=True,null=True)
 
 from django.core.mail import send_mail
 from django.utils.translation import ugettext_lazy as _  
