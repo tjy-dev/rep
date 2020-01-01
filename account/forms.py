@@ -6,7 +6,6 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ('text','picture',)
         
-        
 # sign up 用
 from .models import User
 from django.contrib.auth.forms import UserCreationForm

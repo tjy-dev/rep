@@ -60,7 +60,7 @@ def delete_previous_file(function):
 
 class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    title = models.CharField(max_length=200,null=True,blank=True)
+    #title = models.CharField(max_length=200,null=True,blank=True)
     text = models.TextField()
     created_date = models.DateTimeField(default=timezone.now)
     published_date = models.DateTimeField(blank=True, null=True)
@@ -79,8 +79,8 @@ class Post(models.Model):
     def delete(self, *args, **kwargs):
         super(Post, self).delete(*args, **kwargs)
         
-    def __str__(self):
-        return self.title
+    #def __str__(self):
+    #    return self.title
 
 class Like(models.Model):
     post = models.ForeignKey(Post,on_delete=models.CASCADE,null=True)

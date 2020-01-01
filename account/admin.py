@@ -42,7 +42,6 @@ class MyUserAdmin(UserAdmin):
     ordering = ('email',)
 
 
-
 admin.site.register(User,MyUserAdmin)
 admin.site.register(Post)
 admin.site.register(Like)

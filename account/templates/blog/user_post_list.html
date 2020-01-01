@@ -9,21 +9,60 @@
     <p>{{ person.username }}</p>
     {{ person.bio }}<br><br>
 
-    {% for post in posts %}
-    <div class="post-container">
-        <div class="post-title-container">
-            <a href="{% url 'post_detail' pk=post.pk %}" class="post-title">{{ post.title }}</a>
-        </div>
-        {% if post.picture != null and post.picture != blank and post.picture != "" %}
-            <img src='{{ MEDIA_URL }}{{post.picture}}' class="post-image">
+    <form name="name_form" action="{% url 'user_follow' username=person.username %}" method="POST">
+        {% csrf_token %}
+        {% if is_follow == 1 %}
+            <input id="like" class="on follow_button" type="submit" value="Following"> 
+        {% else %}
+            <input id="like" class="follow_button" type="submit" value="Follow"> 
         {% endif %}
+    </form>
 
-        <p class="post-text">
-            {{ post.text|linebreaksbr }}
-        </p>
-        <div class="post-date">
-            {{ post.published_date }}
-        </div>
-    </div>
+    {% for post in posts %}
+     <div class="post-container">
+         <div class="post-account-container">
+            <a href="{% url 'user_post_list' username=post.author.username %}">
+                <img class="post_profile_pic" src="{{MEDIA_URL}}{{post.author.profile_pic.thumbnail}}">
+                <a class="post-account" href="{% url 'user_post_list' username=post.author.username %}">{{ post.author.username}}</a>
+            </a>
+         </div>
+
+         {% if post.picture != null and post.picture != blank and post.picture != "" %}
+             <img src='{{ MEDIA_URL }}{{post.picture}}' class="post-image">
+         {% endif %}
+
+         <p class="post-text">
+             {{ post.text|linebreaksbr }}
+         </p>
+         <div class="post-date">
+             {{ post.published_date }}
+         </div>
+         <a class="post-clicklayer" href="{% url 'post_detail' pk=post.pk %}"></a>
+     </div>
     {% endfor %}
+    <script>
+        $("form").submit( function(event) {
+            event.preventDefault();
+            var form = $(this);
+            $.ajax({
+              url: form.prop("action"),
+              method: form.prop("method"),
+              data: form.serialize(),
+              timeout: 10000,
+              dataType: "json",
+            })
+            .done( function(data) {
+              //alert("done");
+              var btn = document.getElementById('like');
+              if (data.like == true){
+                $('#like').addClass('on')
+                btn.value = "Following"
+              }else{
+                $('#like').removeClass('on')
+                btn.value = "Follow"
+              }
+              $("#id_div_ajax_response").text(data.text);
+            })
+        });
+    </script>
 {% endblock %}

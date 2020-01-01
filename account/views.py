@@ -7,20 +7,22 @@ from .models import Like
 from django.db.models import Q
 from .forms import PostForm
 from django.shortcuts import redirect
-#from django.urls import reverse_lazy
+from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
+from django.http.response import JsonResponse
 
 import os
 
 def user_post_list(request,username):
     person = get_object_or_404(User, username=username)
     posts = Post.objects.filter(author=person,published_date__lte=timezone.now()).order_by('-published_date')
+    is_follow = Follow.objects.filter(follower=request.user).filter(following=person).count()
     if person == request.user:
         return render(request, 'blog/user_detail_with_list.html',{'posts': posts,})
     else:
-        return render(request, 'blog/user_post_list.html', {'posts': posts,'person':person})
+        return render(request, 'blog/user_post_list.html', {'posts': posts,'person':person,'is_follow':is_follow})
 
 def post_list(request):
     #following = Follow.objects.filter(follower=request.user)
@@ -36,49 +38,6 @@ def post_detail(request, pk):
     abcd = request.user.id
     is_like = Like.objects.filter(user=request.user).filter(post=post).count()
     return render(request, 'blog/post_detail.html', {'post': post,'abc': abc,'abcd':abcd,'is_like':is_like})
-
-from django.http.response import JsonResponse
-
-@login_required
-def post_like(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    is_like = Like.objects.filter(user=request.user).filter(post=post).count()
-    print("islike!! = ")
-    print(is_like)
-    if is_like == 0:
-        like = Like()
-        like.user = request.user
-        like.post = post
-        like.published_date = timezone.now()
-        like.save()
-        is_like = 1
-    else:
-        like = Like.objects.filter(user=request.user).filter(post=post)
-        like.delete()
-        is_like = 0
-    hoge = {
-        'like': is_like,
-        'text': "",
-    }
-    return JsonResponse(hoge)
-
-@login_required
-def user_follow(request,username):
-    person = get_object_or_404(User, username=username)
-    is_follow = Follow.objects.filter(follower=request.user).filter(following=person).count()
-    if person == request.user:
-        return redirect('post_list')#error
-    else:
-        if is_follow == 0:
-            follow = Follow()
-            follow.follower = request.user
-            follow.following = person
-            follow.created_date = timezone.now()
-            follow.save()
-        else:
-            follow = Follow.objects.filter(follower=request.user).filter(following=person)
-            follow.delete()
-        return redirect('post_list')
 
 @login_required
 def post_new(request):
@@ -122,12 +81,60 @@ def post_remove(request, pk):
         return redirect('post_detail', pk=post.pk)
     
 
+###########################################################################
+
+@login_required
+def post_like(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    is_like = Like.objects.filter(user=request.user).filter(post=post).count()
+    print("islike!! = ")
+    print(is_like)
+    if is_like == 0:
+        like = Like()
+        like.user = request.user
+        like.post = post
+        like.published_date = timezone.now()
+        like.save()
+        is_like = 1
+    else:
+        like = Like.objects.filter(user=request.user).filter(post=post)
+        like.delete()
+        is_like = 0
+    hoge = {
+        'like': is_like,
+        'text': "",
+    }
+    return JsonResponse(hoge)
+
+@login_required
+def user_follow(request,username):
+    person = get_object_or_404(User, username=username)
+    is_follow = Follow.objects.filter(follower=request.user).filter(following=person).count()
+    if person == request.user:
+        return reverse_lazy('post_list')#error
+    else:
+        if is_follow == 0:
+            follow = Follow()
+            follow.follower = request.user
+            follow.following = person
+            follow.created_date = timezone.now()
+            follow.save()
+            is_follow = 1
+        else:
+            follow = Follow.objects.filter(follower=request.user).filter(following=person)
+            follow.delete()
+            is_follow = 0
+        hoge = {
+            'like': is_follow,
+            'text': "",
+        }
+        return JsonResponse(hoge)
+
 
 ###########################################################################
 
 
-
-# sign up
+# sign u_p
 from .forms import SignUpForm
 from django.views.generic.edit import CreateView
 
@@ -218,6 +225,7 @@ class user_create_complete(generic.TemplateView):
 
 
 #########################################################################
+
 
 from django.views.generic.edit import UpdateView
 from django.urls import reverse_lazy

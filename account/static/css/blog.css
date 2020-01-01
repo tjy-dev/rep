@@ -228,7 +228,7 @@ a:hover {
     width:  50px;
     height: 50px;
     background    : rgba(1, 1, 1, 0.0);     /* 背景色     */
-    color         : #ffffff;     /* 文字色     */
+    color         : #000000;     /* 文字色     */
     line-height   : 1em;         /* 1行の高さ  */
     transition    : .3s;         /* なめらか変化 */
     /*box-shadow    : 6px 6px 3px #666666;  /* 影の設定 */
@@ -249,7 +249,7 @@ a:hover {
     line-height   : 1em;         /* 1行の高さ  */
     transition    : .3s;         /* なめらか変化 */
     /*box-shadow    : 6px 6px 3px #666666;  /* 影の設定 */
-    border        : 2px solid rgb(173, 19, 78);;    /* 枠の指定 */
+    border        : 2px solid rgb(173, 19, 78);    /* 枠の指定 */
     border-radius: 200rem;
 }
 
@@ -260,10 +260,53 @@ a:hover {
 
 .like_button.on:hover {
     box-shadow    : none;        /* カーソル時の影消去 */
-    background    : #AA3333;     /* 背景色     */
+    background    : rgb(173, 19, 78);     /* 背景色     */
 }
 
 
+.follow_button {
+    display       : inline-block;
+    border-radius : 50%;          /* 角丸       */
+    font-size     : 18pt;        /* 文字サイズ */
+    text-align    : center;      /* 文字位置   */
+    cursor        : pointer;     /* カーソル   */
+    width:  150px;
+    height: 50px;
+    background    : rgba(1, 1, 1, 0.0);     /* 背景色     */
+    color         : #000000;     /* 文字色     */
+    line-height   : 1em;         /* 1行の高さ  */
+    transition    : .3s;         /* なめらか変化 */
+    /*box-shadow    : 6px 6px 3px #666666;  /* 影の設定 */
+    border        : 2px solid #888888;    /* 枠の指定 */
+    border-radius: 200rem;
+}
+
+.follow_button.on {
+    display       : inline-block;
+    border-radius : 50%;          /* 角丸       */
+    font-size     : 18pt;        /* 文字サイズ */
+    text-align    : center;      /* 文字位置   */
+    cursor        : pointer;     /* カーソル   */
+    width:  150px;
+    height: 50px;
+    background    : rgb(173, 19, 78);     /* 背景色     */
+    color         : #ffffff;     /* 文字色     */
+    line-height   : 1em;         /* 1行の高さ  */
+    transition    : .3s;         /* なめらか変化 */
+    /*box-shadow    : 6px 6px 3px #666666;  /* 影の設定 */
+    border        : 2px solid rgb(173, 19, 78);    /* 枠の指定 */
+    border-radius: 200rem;
+}
+
+.follow_button:hover {
+    box-shadow    : none;        /* カーソル時の影消去 */
+    background    : #ffffff;     /* 　背景色     */
+}
+
+.follow_button.on:hover {
+    box-shadow    : none;        /* カーソル時の影消去 */
+    background    : rgb(173, 19, 78);     /* 背景色     */
+}
 
 
 
