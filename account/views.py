@@ -83,23 +83,6 @@ def post_remove(request, pk):
     else:
         return redirect('post_detail', pk=post.pk)
 
-@login_required
-def comment_create(request, pk):
-    """記事へのコメント作成"""
-    post = get_object_or_404(Post, pk=pk)
-    if request.method == 'POST':
-        form = CommentForm(request.POST,)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.post = post
-            comment.comment_author = request.user
-            comment.created_date = timezone.now()
-            comment.save()
-            return redirect('post_detail', pk=post.pk)
-    else:
-        form = CommentForm(instance=post)
-    return render(request, 'blog/comment_create.html', {'form':form,'post':post})
-
 ###########################################################################
 
 @login_required
@@ -147,6 +130,22 @@ def user_follow(request,username):
         }
         return JsonResponse(hoge)
 
+@login_required
+def comment_create(request, pk):
+    """記事へのコメント作成"""
+    post = get_object_or_404(Post, pk=pk)
+    if request.method == 'POST':
+        form = CommentForm(request.POST,)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.comment_author = request.user
+            comment.created_date = timezone.now()
+            comment.save()
+            return redirect('post_detail', pk=post.pk)
+    else:
+        form = CommentForm(instance=post)
+    return render(request, 'blog/comment_create.html', {'form':form,'post':post})
 
 ###########################################################################
 

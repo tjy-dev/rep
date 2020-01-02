@@ -31,6 +31,7 @@
             {% endif %}
         </form>
 
+
         <a href="{% url 'comment_create' pk=post.pk %}">Comment</a><br>
         {% for comment in comment %}
             <div class="post-container">
@@ -40,7 +41,6 @@
                     <a class="post-account" href="{% url 'user_post_list' username=comment.comment_author.username %}">{{ comment.comment_author.username}}</a>
                     </a>
                 </div>
-
                  <p class="post-text">
                     {{ comment.comment_text|linebreaksbr }}
                 </p>
@@ -50,6 +50,8 @@
             </div>
         {% endfor %}
     </div>
+
+
 
     <script>
         $("form").submit( function(event) {
