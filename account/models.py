@@ -92,6 +92,13 @@ class Follow(models.Model):
     following = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='following',null=True)
     created_date = models.DateTimeField(blank=True,null=True)
 
+class Comment(models.Model):
+    comment_text = models.TextField('コメント内容')
+    post = models.ForeignKey(Post, verbose_name='対象記事', on_delete=models.CASCADE,null=True)
+    parent = models.ForeignKey('self', verbose_name='親コメント', null=True, blank=True, on_delete=models.CASCADE)
+    comment_author = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=True)
+    created_date = created_date = models.DateTimeField(blank=True,null=True)
+
 from django.core.mail import send_mail
 from django.utils.translation import ugettext_lazy as _  
   

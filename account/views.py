@@ -4,8 +4,10 @@ from .models import Post
 from .models import User
 from .models import Follow
 from .models import Like
+from .models import Comment
 from django.db.models import Q
 from .forms import PostForm
+from .forms import CommentForm
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
@@ -37,7 +39,8 @@ def post_detail(request, pk):
     abc = post.author.id
     abcd = request.user.id
     is_like = Like.objects.filter(user=request.user).filter(post=post).count()
-    return render(request, 'blog/post_detail.html', {'post': post,'abc': abc,'abcd':abcd,'is_like':is_like})
+    comment = Comment.objects.filter(post=post)
+    return render(request, 'blog/post_detail.html', {'post': post,'abc': abc,'abcd':abcd,'is_like':is_like,'comment':comment})
 
 @login_required
 def post_new(request):
@@ -79,7 +82,23 @@ def post_remove(request, pk):
         return redirect('post_list')
     else:
         return redirect('post_detail', pk=post.pk)
-    
+
+@login_required
+def comment_create(request, pk):
+    """記事へのコメント作成"""
+    post = get_object_or_404(Post, pk=pk)
+    if request.method == 'POST':
+        form = CommentForm(request.POST,)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.comment_author = request.user
+            comment.created_date = timezone.now()
+            comment.save()
+            return redirect('post_detail', pk=post.pk)
+    else:
+        form = CommentForm(instance=post)
+    return render(request, 'blog/comment_create.html', {'form':form,'post':post})
 
 ###########################################################################
 
@@ -87,8 +106,6 @@ def post_remove(request, pk):
 def post_like(request, pk):
     post = get_object_or_404(Post, pk=pk)
     is_like = Like.objects.filter(user=request.user).filter(post=post).count()
-    print("islike!! = ")
-    print(is_like)
     if is_like == 0:
         like = Like()
         like.user = request.user

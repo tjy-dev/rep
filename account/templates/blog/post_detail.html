@@ -30,8 +30,27 @@
                 <input id="like" class="like_button" type="submit" value=""> 
             {% endif %}
         </form>
-        <div id="id_div_ajax_response"></div>
+
+        <a href="{% url 'comment_create' pk=post.pk %}">Comment</a><br>
+        {% for comment in comment %}
+            <div class="post-container">
+                <div class="post-account-container">
+                    <a href="{% url 'user_post_list' username=comment.comment_author.username %}">
+                    <img class="post_profile_pic" src="{{MEDIA_URL}}{{comment.comment_author.profile_pic.thumbnail}}">
+                    <a class="post-account" href="{% url 'user_post_list' username=comment.comment_author.username %}">{{ comment.comment_author.username}}</a>
+                    </a>
+                </div>
+
+                 <p class="post-text">
+                    {{ comment.comment_text|linebreaksbr }}
+                </p>
+                <div class="post-date">
+                    {{ comment.created_date }}
+                </div>
+            </div>
+        {% endfor %}
     </div>
+
     <script>
         $("form").submit( function(event) {
             event.preventDefault();
@@ -49,7 +68,6 @@
               }else{
                 $('#like').removeClass('on')
               }
-              $("#id_div_ajax_response").text(data.text);
             })
         });
     </script>

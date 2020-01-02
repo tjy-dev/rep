@@ -5,6 +5,16 @@
     <form method="POST" class="post-form" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
+        <!--<table>
+            <tr>
+                <td>{{ form.text.label_tag }}</td>
+                <td>{{ form.text }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.picture.label_tag }}</td>
+                <td>{{ form.picture }}</td>
+            </tr>
+        </table>-->
         <button type="submit" class="save btn btn-default">Save</button>
     </form>
 {% endblock %}

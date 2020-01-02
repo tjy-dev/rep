@@ -3,6 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from .models import User
 from .models import Post
 from .models import Like
+from .models import Comment
 from .models import Follow
 
 from django.contrib.auth.models import Group
@@ -13,7 +14,6 @@ class MyUserChangeForm(UserChangeForm):
     class Meta:
         model = User
         fields = '__all__'
-
 
 class MyUserCreationForm(UserCreationForm):
     class Meta:
@@ -44,6 +44,7 @@ class MyUserAdmin(UserAdmin):
 
 admin.site.register(User,MyUserAdmin)
 admin.site.register(Post)
+admin.site.register(Comment)
 admin.site.register(Like)
 admin.site.register(Follow)
 admin.site.unregister(Group)

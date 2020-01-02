@@ -8,7 +8,7 @@ urlpatterns = [
     path('post/<int:pk>/edit/', views.post_edit, name='post_edit'),
     path('post/<pk>/remove/', views.post_remove, name='post_remove'),
     path('post/<pk>/like/', views.post_like, name='post_like'),
-
+    path('post/<pk>/comment/', views.comment_create, name='comment_create'),
     
     path('user/settings/edit/', views.user_edit.as_view(), name='edit_user'),
     path('user/settings/password/', views.password_change.as_view(), name='edit_password'),
