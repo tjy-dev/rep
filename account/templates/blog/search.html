@@ -1,0 +1,12 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block content %}
+    <form action="{% url 'search' %}" method="GET">
+            <input type="text" value="{{txt}}" placeholder="検索" name="q" autocomplete="off">
+            <button type="submit">Search</button>
+    </form>
+    <div id="posts">
+        {% include "blog/base_post_list.html" %}
+    </div>
+{% endblock %}

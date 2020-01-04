@@ -147,8 +147,17 @@ def comment_create(request, pk):
         form = CommentForm(instance=post)
     return render(request, 'blog/comment_create.html', {'form':form,'post':post})
 
-###########################################################################
+@login_required
+def search(request):
+    txt = request.GET.get('q')
+    print(txt)
+    if txt == None or txt == "":
+        return render(request, 'blog/search.html',)
+    else:
+        posts = Post.objects.filter(Q(text__icontains=txt))
+        return render(request, 'blog/search.html',{'posts':posts,'txt':txt})
 
+###########################################################################
 
 # sign u_p
 from .forms import SignUpForm

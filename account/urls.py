@@ -9,9 +9,10 @@ urlpatterns = [
     path('post/<pk>/remove/', views.post_remove, name='post_remove'),
     path('post/<pk>/like/', views.post_like, name='post_like'),
     path('post/<pk>/comment/', views.comment_create, name='comment_create'),
-    
     path('user/settings/edit/', views.user_edit.as_view(), name='edit_user'),
     path('user/settings/password/', views.password_change.as_view(), name='edit_password'),
+
+    path('search',views.search,name='search'),
 
     path('accounts/signup/', views.sign_up, name='signup'),
     path('accounts/done', views.user_create_temp.as_view(), name='user_create_done'),
@@ -19,7 +20,6 @@ urlpatterns = [
 
     path('<username>',views.user_post_list,name='user_post_list'),
     path('<username>/follow',views.user_follow,name='user_follow'),
-    #path('accounts/signup/', views.SignUp.as_view(), name='signup')
 ]
 
 

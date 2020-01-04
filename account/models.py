@@ -93,7 +93,7 @@ class Follow(models.Model):
     created_date = models.DateTimeField(blank=True,null=True)
 
 class Comment(models.Model):
-    comment_text = models.TextField('コメント内容')
+    comment_text = models.TextField('コメント内容',max_length=250)
     post = models.ForeignKey(Post, verbose_name='対象記事', on_delete=models.CASCADE,null=True)
     parent = models.ForeignKey('self', verbose_name='親コメント', null=True, blank=True, on_delete=models.CASCADE)
     comment_author = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=True)
