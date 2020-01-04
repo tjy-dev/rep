@@ -1,20 +1,17 @@
 {% extends 'blog/base.html' %}
+{% load widget_tweaks %}
 
 {% block content %}
     <h2>New post</h2>
     <form method="POST" class="post-form" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
-        <!--<table>
-            <tr>
-                <td>{{ form.text.label_tag }}</td>
-                <td>{{ form.text }}</td>
-            </tr>
-            <tr>
-                <td>{{ form.picture.label_tag }}</td>
-                <td>{{ form.picture }}</td>
-            </tr>
-        </table>-->
-        <button type="submit" class="save btn btn-default">Save</button>
+        <p>
+            {{ form.text|add_class:'class-name' }}
+        </p>
+        <p>
+            {{ form.picture.label}}
+            {{ form.picture|add_class:'class-name' }}
+        </p>
+        <button type="submit" class="">Save</button>
     </form>
 {% endblock %}

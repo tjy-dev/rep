@@ -144,7 +144,25 @@ def comment_create(request, pk):
             comment.save()
             return redirect('post_detail', pk=post.pk)
     else:
-        form = CommentForm(instance=post)
+        form = CommentForm()
+    return render(request, 'blog/comment_create.html', {'form':form,'post':post})
+
+@login_required
+def reply_comment(request,pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    post = comment.post
+    if request.method == 'POST':
+        form = CommentForm(request.POST,)
+        if form.is_valid():
+            reply = form.save(commit=False)
+            reply.post = post
+            reply.parent = comment
+            reply.comment_author = request.user
+            reply.created_date = timezone.now()
+            reply.save()
+            return redirect('post_detail', pk=post.pk)
+    else:
+        form = CommentForm()
     return render(request, 'blog/comment_create.html', {'form':form,'post':post})
 
 @login_required

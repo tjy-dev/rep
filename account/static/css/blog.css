@@ -187,7 +187,7 @@ a:hover {
     color: #404040;
     font-size: 1em;
     line-height: 1.7em;
-    
+    overflow-wrap: break-word;
 }
 
 .post-date {
