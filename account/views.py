@@ -20,7 +20,10 @@ import os
 def user_post_list(request,username):
     person = get_object_or_404(User, username=username)
     posts = Post.objects.filter(author=person,published_date__lte=timezone.now()).order_by('-published_date')
-    is_follow = Follow.objects.filter(follower=request.user).filter(following=person).count()
+    if request.user.is_authenticated:
+        is_follow = Follow.objects.filter(follower=request.user).filter(following=person).count()
+    else:
+        is_follow = 0
     if person == request.user:
         return render(request, 'blog/user_detail_with_list.html',{'posts': posts,})
     else:
@@ -38,7 +41,10 @@ def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     abc = post.author.id
     abcd = request.user.id
-    is_like = Like.objects.filter(user=request.user).filter(post=post).count()
+    if request.user.is_authenticated:
+        is_like = Like.objects.filter(user=request.user).filter(post=post).count()
+    else:
+        is_like = 0
     comment = Comment.objects.filter(post=post)
     return render(request, 'blog/post_detail.html', {'post': post,'abc': abc,'abcd':abcd,'is_like':is_like,'comment':comment})
 

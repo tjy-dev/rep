@@ -20,6 +20,7 @@
 
     {% include "blog/base_post_list.html" %}
     
+    {% if user.is_authenticated %}
     <script>
         $("form").submit( function(event) {
             event.preventDefault();
@@ -45,4 +46,5 @@
             })
         });
     </script>
+    {% endif %}
 {% endblock %}

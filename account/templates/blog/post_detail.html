@@ -52,7 +52,7 @@
     </div>
 
 
-
+    {% if user.is_authenticated %}
     <script>
         $("form").submit( function(event) {
             event.preventDefault();
@@ -73,4 +73,5 @@
             })
         });
     </script>
+    {% endif %}
 {% endblock %}
