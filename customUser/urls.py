@@ -16,10 +16,19 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from django.contrib.auth import views
+from account.urls import router as blog_router
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('account.urls')),
+    path('api/', include(blog_router.urls)),
     path('accounts/login/', views.LoginView.as_view(), name='login'),
     path('accounts/logout/', views.LogoutView.as_view(next_page='/'), name='logout'),
 ]
+
+# 画像用
+from django.conf import settings
+from django.conf.urls.static import static
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

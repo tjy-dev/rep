@@ -1,13 +1,8 @@
 from django.shortcuts import render
 from django.utils import timezone
-from .models import Post
-from .models import User
-from .models import Follow
-from .models import Like
-from .models import Comment
+from .models import Post,User,Follow,Like,Comment
 from django.db.models import Q
-from .forms import PostForm
-from .forms import CommentForm
+from .forms import PostForm,CommentForm
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
@@ -105,6 +100,7 @@ def post_like(request, pk):
     else:
         like = Like.objects.filter(user=request.user).filter(post=post)
         like.delete()
+        post.save()
         is_like = 0
     hoge = {
         'like': is_like,
@@ -169,7 +165,7 @@ def reply_comment(request,pk):
             return redirect('post_detail', pk=post.pk)
     else:
         form = CommentForm()
-    return render(request, 'blog/comment_create.html', {'form':form,'post':post})
+    return render(request, 'blog/reply_create.html', {'form':form,'comment':comment})
 
 @login_required
 def search(request):
@@ -275,7 +271,6 @@ class user_create_complete(generic.TemplateView):
 
 #########################################################################
 
-
 from django.views.generic.edit import UpdateView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -297,7 +292,6 @@ class user_edit(OnlyYouMixin,UpdateView):
         # ログイン中のユーザーで検索することを明示する
         return self.request.user
 
-
 from django.contrib.auth.views import PasswordChangeView
 from .forms import MyPasswordChangeForm
 
@@ -306,3 +300,5 @@ class password_change(OnlyYouMixin,PasswordChangeView):
     form_class = MyPasswordChangeForm
     success_url = reverse_lazy('post_list')
     template_name = 'registration/edit_password.html'
+
+

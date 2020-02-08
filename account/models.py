@@ -12,6 +12,7 @@ from django.conf import settings
 
 import uuid
 import os
+
 def get_image_path(instance, filename):
     prefix = 'images/'
     name = str(uuid.uuid4()).replace('-', '')
@@ -21,6 +22,20 @@ def get_image_path(instance, filename):
     #:param instance: インスタンス (models.Model)
     #:param filename: 元ファイル名
     #:return: カスタマイズしたファイル名を含む画像パス
+
+def getThumbnail(str):
+    proImage = str
+    ext = ""
+    if proImage != "":
+        while True:
+            if proImage[-1] == ".":
+                break
+            else:
+                ext = proImage[-1] + ext
+                proImage = proImage[:-1]
+        proImage = proImage + "thumbnail."
+        proImage = proImage + ext
+    return proImage
 
 def delete_previous_file(function):
     #不要となる古いファイルを削除する為のデコレータ実装.
@@ -41,10 +56,8 @@ def delete_previous_file(function):
         # 関数実行
         result = function(*args, **kwargs)
 
-
         result2 = Post.objects.filter(pk=self.pk)
         newpic = result2[0] if len(result2) else None
-
         # 保存前のファイルがあったら削除
         if previous:
             if previous.picture.name:
@@ -52,19 +65,22 @@ def delete_previous_file(function):
                     if newpic.picture.name:
                         if previous.picture.name != newpic.picture.name:
                             os.remove(settings.MEDIA_ROOT + '/' + previous.picture.name)
+                            os.remove(settings.MEDIA_ROOT + '/' + getThumbnail(previous.picture.name))
                             return result
                 else:
                     os.remove(settings.MEDIA_ROOT + '/' + previous.picture.name)
+                    os.remove(settings.MEDIA_ROOT + '/' + getThumbnail(previous.picture.name))
                     return result
     return wrapper
 
 class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    #title = models.CharField(max_length=200,null=True,blank=True)
-    text = models.TextField()
-    created_date = models.DateTimeField(default=timezone.now)
-    published_date = models.DateTimeField(blank=True, null=True)
-    picture = models.ImageField(upload_to=get_image_path, null=True,blank=True)
+    text = models.TextField(unique=False)
+    published_date = models.DateTimeField(blank=True, null=True,unique=False)
+    #picture = models.ImageField(upload_to=get_image_path, null=True,blank=True,unique=False)
+    picture = StdImageField(upload_to=get_image_path,null=True,blank=True,variations={
+        'thumbnail':(350,300,True),
+    })
     
     def publish(self):
         self.published_date = timezone.now()
@@ -97,7 +113,7 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, verbose_name='対象記事', on_delete=models.CASCADE,null=True)
     parent = models.ForeignKey('self', verbose_name='親コメント', null=True, blank=True, on_delete=models.CASCADE)
     comment_author = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=True)
-    created_date = created_date = models.DateTimeField(blank=True,null=True)
+    created_date = models.DateTimeField(blank=True,null=True)
 
 from django.core.mail import send_mail
 from django.utils.translation import ugettext_lazy as _  
@@ -155,8 +171,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     #ここに追加する
     profile_pic = StdImageField(_('profile picture'),upload_to=get_image_path,null=True,blank=True,variations={
-        'thumbnail':(400,400,True),
-    })    
+        'thumbnail':(40,40,True),
+    })
 
     bio = models.TextField(_('bio'),max_length=250,null=True,blank=True)
     date_of_birth = models.DateField(_('date of birth'),null=True)
