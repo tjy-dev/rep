@@ -50,6 +50,23 @@ class PostViewSet(viewsets.ReadOnlyModelViewSet):
     def dispatch(self, *args, **kwargs):
         return super(PostViewSet, self).dispatch(*args, **kwargs)
 
+class SearchViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Post.objects.order_by('-published_date')
+    serializer_class = PostSerializer
+    filter_fields = ('author', 'text',)
+    filter_backends = [DjangoFilterBackend]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_authenticated:
+            q = self.request.GET.get(key="q", default="")
+            snippets = Post.objects.text__in(q).order_by('-published_date')
+            return snippets
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(PostViewSet, self).dispatch(*args, **kwargs)
+
 class CommentViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Comment.objects.order_by('-created_date')
     serializer_class = CommentSerializer
@@ -73,7 +90,7 @@ class PostDelete(APIView):
         for f in following:
             a.append(f.following)
         snippets = Post.objects.filter(Q(author__in=a) | Q(author=request.user))
-        serializer = PostSerializer(snippets, many=True)
+        #serializer = PostSerializer(snippets, many=True)
         return Response({"detail":"No permission"})#serializer.data)
 
     def post(self, request):

@@ -125,7 +125,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-ALLOWED_HOSTS = ['127.0.0.1','.pythonanywhere.com','192.168.11.47',]
+ALLOWED_HOSTS = ['127.0.0.1','.pythonanywhere.com','192.168.11.47','118.27.25.245',]
 LOGIN_REDIRECT_URL = '/'
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))#

@@ -200,6 +200,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email','profile_pic','bio','date_of_birth',]#####追加する(コンソールよう)
 
+    def save(self, *args, **kwargs):
+        print("hello")
+        #self.bio = args
+        #self.bio = "Hello I'm the engineer of Django Beta #Developer"
+        super(User, self).save(*args, **kwargs)
+
     class Meta:
         verbose_name = _('user')
         verbose_name_plural = _('users')
@@ -209,7 +215,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
     
-
     def get_full_name(self):
         """
         Return the first_name plus the last_name, with a space in between.
