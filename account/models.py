@@ -37,6 +37,34 @@ def getThumbnail(str):
         proImage = proImage + ext
     return proImage
 
+def delete_previous_profile_picture(function):
+    def wrapper(*args, **kwargs):
+        self = args[0]
+        # 保存前のファイル名を取得
+        result = User.objects.filter(pk=self.pk)
+        previous = result[0] if len(result) else None
+        super(User, self).save()
+        
+        # 関数実行
+        result = function(*args, **kwargs)
+
+        result2 = User.objects.filter(pk=self.pk)
+        newpic = result2[0] if len(result2) else None
+        # 保存前のファイルがあったら削除
+        if previous:
+            if previous.profile_pic.name:
+                if newpic:
+                    if newpic.profile_pic.name:
+                        if previous.profile_pic.name != newpic.profile_pic.name:
+                            os.remove(settings.MEDIA_ROOT + '/' + previous.profile_pic.name)
+                            os.remove(settings.MEDIA_ROOT + '/' + getThumbnail(previous.profile_pic.name))
+                            return result
+                else:
+                    os.remove(settings.MEDIA_ROOT + '/' + previous.profile_pic.name)
+                    os.remove(settings.MEDIA_ROOT + '/' + getThumbnail(previous.profile_pic.name))
+                    return result
+    return wrapper
+
 def delete_previous_file(function):
     #不要となる古いファイルを削除する為のデコレータ実装.
     #:param function: メイン関数
@@ -200,10 +228,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email','profile_pic','bio','date_of_birth',]#####追加する(コンソールよう)
 
+    @delete_previous_profile_picture
     def save(self, *args, **kwargs):
         print("hello")
-        #self.bio = args
-        #self.bio = "Hello I'm the engineer of Django Beta #Developer"
         super(User, self).save(*args, **kwargs)
 
     class Meta:
