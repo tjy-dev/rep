@@ -98,11 +98,11 @@ def delete_previous_file(function):
 
                 h, w = img.size
                 length = h + w
-                quality = 800 / length
+                quality = 1400 / length
                 img_resize = img.resize((int(img.width * quality), int(img.height * quality)))
                 title, ext = os.path.splitext(path)
                 img_resize.save(title + '.thumbnail' + ext)
-                
+
                 length = h + w
                 quality = 2500 / length
                 img_resize = img.resize((int(img.width * quality), int(img.height * quality)))
