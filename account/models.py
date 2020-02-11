@@ -12,6 +12,8 @@ from django.conf import settings
 
 import uuid 
 import os 
+from PIL import Image
+
 
 def get_image_path(instance, filename):
     prefix = 'images/'
@@ -86,6 +88,26 @@ def delete_previous_file(function):
 
         result2 = Post.objects.filter(pk=self.pk)
         newpic = result2[0] if len(result2) else None
+
+        # 画像のリサイズを行う
+        if newpic:
+            if newpic.picture.name:
+                path = settings.MEDIA_ROOT + '/' + newpic.picture.name
+                
+                img = Image.open(path)
+
+                h, w = img.size
+                length = h + w
+                quality = 800 / length
+                img_resize = img.resize((int(img.width * quality), int(img.height * quality)))
+                title, ext = os.path.splitext(path)
+                img_resize.save(title + '.thumbnail' + ext)
+                
+                length = h + w
+                quality = 2500 / length
+                img_resize = img.resize((int(img.width * quality), int(img.height * quality)))
+                img_resize.save(path)
+
         # 保存前のファイルがあったら削除
         if previous:
             if previous.picture.name:
