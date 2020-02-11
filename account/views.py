@@ -52,6 +52,7 @@ def post_new(request):
             post.author = request.user
             post.published_date = timezone.now()
             post.save()
+            print(post.picture.name)#Ok
             return redirect('post_detail', pk=post.pk)
     else:
         form = PostForm()
