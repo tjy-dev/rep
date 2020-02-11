@@ -10,8 +10,8 @@ from stdimage.models import StdImageField #サイズ指定画像
 
 from django.conf import settings
 
-import uuid
-import os
+import uuid 
+import os 
 
 def get_image_path(instance, filename):
     prefix = 'images/'
