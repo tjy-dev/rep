@@ -52,6 +52,18 @@ def delete_previous_profile_picture(function):
 
         result2 = User.objects.filter(pk=self.pk)
         newpic = result2[0] if len(result2) else None
+        # 画像のリサイズを行う
+        if newpic:
+            if newpic.profile_pic.name:
+                path = settings.MEDIA_ROOT + '/' + newpic.profile_pic.name
+                
+                img = Image.open(path)
+                h, w = img.size
+
+                length = h + w
+                quality = 1000 / length
+                img_resize = img.resize((int(img.width * quality), int(img.height * quality)))
+                img_resize.save(path)
         # 保存前のファイルがあったら削除
         if previous:
             if previous.profile_pic.name:
@@ -104,7 +116,7 @@ def delete_previous_file(function):
                 img_resize.save(title + '.thumbnail' + ext)
 
                 length = h + w
-                quality = 3500 / length
+                quality = 2500 / length
                 img_resize = img.resize((int(img.width * quality), int(img.height * quality)))
                 img_resize.save(path)
 
