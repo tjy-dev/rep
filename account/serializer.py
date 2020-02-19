@@ -15,7 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     author = UserSerializer()
     published_date = serializers.DateTimeField(default=timezone.now)
-
+    
     class Meta:
         model = Post
         fields = ('id','text','picture','author','published_date',)

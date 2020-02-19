@@ -29,6 +29,11 @@ urlpatterns = [
     path('api/posts/like/',viewsapi.PostLike.as_view(),name='PostLike'),
     path('api/user/follow/',viewsapi.UserFollow.as_view(),name='UserFollow'),
     path('api/post/new/',viewsapi.PostCreate.as_view(),name='post_create'),
+    path('api/user/edit/',viewsapi.UserEdit.as_view(),name='UserEditAPI'),
+    path('api/user/detail/',viewsapi.UserDetail.as_view(),name='UserDetailAPI'),
+    path('api/comment/create/',viewsapi.CreateComment.as_view(),name='CommentCreateAPI'),
+    path('api/user/edit/password/',viewsapi.ChangePassword.as_view(),name='CHangePasswordAPI'),
+    path('api/test/',viewsapi.TestAPI.as_view(),name='Test'),
 ]
 
 

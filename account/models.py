@@ -237,7 +237,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     })
 
     bio = models.TextField(_('bio'),max_length=250,null=True,blank=True)
-    date_of_birth = models.DateField(_('date of birth'),null=True)
+    date_of_birth = models.DateField(_('date of birth'),null=True,blank=True)
     first_name = models.CharField(_('first name'), max_length=30, blank=True)
     last_name = models.CharField(_('last name'), max_length=150, blank=True)
     email = models.EmailField(_('email address'), blank=False,unique=False)

@@ -217,6 +217,11 @@ def sign_up(request):
                 'token': dumps(user.pk),
                 'user': user,
             }
+            #print(request.scheme)
+            #print(current_site.domain)
+            #print(dumps(user.pk))
+            #print(user)
+            #print(context)
             
             subject = render_to_string('registration/subject.txt', context)
             message = render_to_string('registration/message.txt', context)
@@ -233,6 +238,7 @@ class user_create_temp(generic.TemplateView):
     """ユーザー仮登録したよ"""
     template_name = 'registration/user_create_done.html'
 
+import json
 from django.conf import settings
 from django.http import Http404, HttpResponseBadRequest
 class user_create_complete(generic.TemplateView):
@@ -242,12 +248,15 @@ class user_create_complete(generic.TemplateView):
 
     def get(self, request, **kwargs):
         """tokenが正しければ本登録."""
-        token = kwargs.get('token')
+        token = kwargs.get('token')#urls.py 
+        #print(token)
         try:
             user_pk = loads(token, max_age=self.timeout_seconds)
 
         # 期限切れ
         except SignatureExpired:
+            #print(loads("MQ:1j3IbO:Gc06VwBsIwE7AOBcgm5EfuDYDNw"))
+            #print(dumps(1))
             return HttpResponseBadRequest()
 
         # tokenが間違っている
@@ -302,5 +311,4 @@ class password_change(OnlyYouMixin,PasswordChangeView):
     form_class = MyPasswordChangeForm
     success_url = reverse_lazy('post_list')
     template_name = 'registration/edit_password.html'
-
-
+    

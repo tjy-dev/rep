@@ -135,8 +135,8 @@ MEDIA_URL = '/media/'
 
 AUTH_USER_MODEL = 'account.User'#追記
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'#実際にメールを送る
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'#コンソールに表示
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'#実際にメールを送る
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'#コンソールに表示
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587

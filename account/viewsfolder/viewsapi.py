@@ -1,8 +1,6 @@
-
 from django.utils import timezone
 from ..models import Post,User,Follow,Like,Comment
 from django.db.models import Q
-from ..forms import PostForm,CommentForm
 from django.shortcuts import get_object_or_404
 
 import django_filters
@@ -65,7 +63,7 @@ class SearchViewSet(viewsets.ReadOnlyModelViewSet):
 
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
-        return super(PostViewSet, self).dispatch(*args, **kwargs)
+        return super(SearchViewSet, self).dispatch(*args, **kwargs)
 
 class CommentViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Comment.objects.order_by('-created_date')
@@ -80,19 +78,10 @@ class CommentViewSet(viewsets.ReadOnlyModelViewSet):
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.core import serializers
+import json
 
 
 class PostDelete(APIView):
-    def get(self, request, format=None):
-        #usernames = [post.text for post in Post.objects.all()[0:3]]#1-3個め表示
-        following = Follow.objects.filter(follower=request.user)
-        a = []
-        for f in following:
-            a.append(f.following)
-        snippets = Post.objects.filter(Q(author__in=a) | Q(author=request.user))
-        #serializer = PostSerializer(snippets, many=True)
-        return Response({"detail":"No permission"})#serializer.data)
-
     def post(self, request):
         data = request.data
         delete = data["delete"]
@@ -130,11 +119,11 @@ class PostLike(APIView):
                     like.post = post
                     like.published_date = timezone.now()
                     like.save()
-                    return Response({'like': 'True'})
+                    return Response({'Like': 'True'})
                 else:
                     like = Like.objects.filter(user=request.user).filter(post=post)
                     like.delete()
-                    return Response({'like': 'False'})
+                    return Response({'Like': 'False'})
         else:
             return Response({'detail': 'No permisson'})
 
@@ -172,6 +161,29 @@ class UserFollow(APIView):
         else:
             return Response({'detail': 'No permisson'})
 
+class UserDetail(APIView):
+    def post(self, request):
+        data = request.data
+        pk = data["id"]
+        usern = data["username"]
+        user = get_object_or_404(User, pk=pk)
+        username = user.username
+        bio = user.bio
+        profile = user.profile_pic
+
+        if request.user.id == pk:
+            return Response({"username":username,"bio":bio,"Following":"None"})
+
+        if usern == request.user.username:
+            is_follow = Follow.objects.filter(follower=request.user).filter(following=user).count()
+            print(str(profile))
+            if is_follow == 0:
+                return Response({"username":username,"bio":bio,"Following": "False"})
+            else:
+                return Response({"username":username,"bio":bio,"Following": "True"})
+        else:
+            return Response({'Detail': 'No permisson'})
+
 class PostCreate(APIView):
     def post(self, request):
         data = request.data
@@ -189,10 +201,65 @@ class PostCreate(APIView):
             return Response({'detail': 'Success'})
         return Response({'detail': 'No permisson'})
 
-class Post_like_api(APIView):
+class UserEdit(APIView):
+    def post(self,request):
+        data = request.data
+        profpic = data["profile"]
+        bio = data["bio"]
+        userid = data["userid"]
+        if userid == request.user.id:
+            user = get_object_or_404(User, pk=request.user.id)
+            user.profile_pic = profpic
+            user.bio = bio
+            user.save()
+            return Response({'detail':'Success'})
+        return Response({'detail': 'No permisson'})
+
+class CreateComment(APIView):
+    def post(self, request):
+        data = request.data
+        text = data["text"]
+        aut = data["author"]
+        pk = data["postid"]
+        if aut == request.user.username:
+            comment = Comment()
+            comment.comment_text = text
+            comment.comment_author = request.user
+            comment.created_date = timezone.now()
+            post = get_object_or_404(Post, pk=pk)
+            comment.post = post
+
+            comment.save()
+            return Response({'detail': 'Success'})
+        return Response({'detail': 'No permisson'})
+
+class ChangePassword(APIView):
+    def post(self, request):
+        data = request.data
+        passwd = data["passwd"]
+        usrid = data["userid"]
+        if str(usrid) == str(request.user.id):
+            user = get_object_or_404(User, pk=request.user.id)
+            user.set_password(passwd)
+            user.save()
+            return Response({'detail': 'Success'})
+        return Response({'detail': 'No permisson'})
+
+##not using
+class TestAPI(APIView):
     def get(self, request, format=None):
         #wd = request.GET.get(key="delete", default="false")
-        return Response({'sucsess':'True'})
+        #usernames = [post.text for post in Post.objects.all()[0:3]]#1-3個め表示
+        following = Follow.objects.filter(follower=request.user)
+        a = []
+        for f in following:
+            a.append(f.following)
+        snippets = Post.objects.filter(Q(author__in=a) | Q(author=request.user))
+        serializer = PostSerializer(snippets, many=True)
+        data = serializer.data
+        data.append({"helllllllllllo":"are you here"})
+        return Response(data)
+
     def post(self, request):
         return Response({'sucsess':'True'})
 
