@@ -15,7 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     author = UserSerializer()
     published_date = serializers.DateTimeField(default=timezone.now)
-    
+
     class Meta:
         model = Post
         fields = ('id','text','picture','author','published_date',)
@@ -26,4 +26,4 @@ class CommentSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Comment
-        fields = ('comment_text','post','parent','comment_author','created_date',)
+        fields = ('id','comment_text','post','parent','comment_author','created_date',)

@@ -32,6 +32,7 @@ urlpatterns = [
     path('api/user/edit/',viewsapi.UserEdit.as_view(),name='UserEditAPI'),
     path('api/user/detail/',viewsapi.UserDetail.as_view(),name='UserDetailAPI'),
     path('api/comment/create/',viewsapi.CreateComment.as_view(),name='CommentCreateAPI'),
+    path('api/comment/delete/',viewsapi.DeleteComment.as_view(),name='DeleteCommentAPI'),
     path('api/user/edit/password/',viewsapi.ChangePassword.as_view(),name='CHangePasswordAPI'),
     path('api/test/',viewsapi.TestAPI.as_view(),name='Test'),
 ]

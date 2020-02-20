@@ -86,10 +86,10 @@ class PostDelete(APIView):
         data = request.data
         delete = data["delete"]
         pk = data["id"]
-        usern = data["username"]
+        userid = data["request_user_id"]
         post = get_object_or_404(Post, pk=pk)
 
-        if usern == request.user.username:
+        if str(userid) == str(request.user.id):
             if delete == "true":
                 if request.user == post.author:
                     post.delete()
@@ -106,11 +106,11 @@ class PostLike(APIView):
     def post(self, request):
         data = request.data
         pk = data["id"]
-        usern = data["username"]
+        userid = data["request_user_id"]
         wlike = data["like"]
         post = get_object_or_404(Post, pk=pk)
 
-        if usern == request.user.username:
+        if str(userid) == str(request.user.id):
             if wlike == "true":
                 is_like = Like.objects.filter(user=request.user).filter(post=post).count()
                 if is_like == 0:
@@ -134,49 +134,50 @@ class UserFollow(APIView):
     def post(self, request):
         data = request.data
         pk = data["id"]
-        usern = data["username"]
-        wlike = data["follow"]
+        userid = data["request_user_id"]
         user = get_object_or_404(User, pk=pk)
 
-        if usern == request.user.username:
-            if wlike == "true":
-                is_follow = Follow.objects.filter(follower=request.user).filter(following=user).count()
-                if is_follow == 0:
-                    follow = Follow()
-                    follow.follower = request.user
-                    follow.following = user
-                    follow.published_date = timezone.now()
-                    follow.save()
-                    return Response({'Follow': 'True'})
-                else:
-                    follow = Follow.objects.filter(follower=request.user).filter(following=user)
-                    follow.delete()
-                    return Response({'Follow': 'False'})
+        if str(userid) == str(request.user.id):
+            is_follow = Follow.objects.filter(follower=request.user).filter(following=user).count()
+            if is_follow == 0:
+                follow = Follow()
+                follow.follower = request.user
+                follow.following = user
+                follow.published_date = timezone.now()
+                follow.save()
+                return Response({'Follow': 'True'})
             else:
-                is_follow = Follow.objects.filter(follower=request.user).filter(following=user).count()
-                if is_follow == 0:
-                    return Response({'Following': 'False'})
-                else:
-                    return Response({'Following': 'True'})
+                follow = Follow.objects.filter(follower=request.user).filter(following=user)
+                follow.delete()
+                return Response({'Follow': 'False'})
         else:
             return Response({'detail': 'No permisson'})
+
+class GetFollowList(APIView):
+    def get(self,request):
+        return Response({"Detail":"Success"})
+
+# TODO: List
+## get following list
+## delete user
+## delete comment
+## reply to comment
 
 class UserDetail(APIView):
     def post(self, request):
         data = request.data
         pk = data["id"]
-        usern = data["username"]
+        userid = data["request_user_id"]
         user = get_object_or_404(User, pk=pk)
         username = user.username
         bio = user.bio
-        profile = user.profile_pic
+        #profile = str(user.profile_pic)
 
         if request.user.id == pk:
             return Response({"username":username,"bio":bio,"Following":"None"})
 
-        if usern == request.user.username:
+        if str(userid) == str(request.user.id):
             is_follow = Follow.objects.filter(follower=request.user).filter(following=user).count()
-            print(str(profile))
             if is_follow == 0:
                 return Response({"username":username,"bio":bio,"Following": "False"})
             else:
@@ -189,9 +190,8 @@ class PostCreate(APIView):
         data = request.data
         text = data["text"]
         pic = data["picture"]
-        aut = data["author"]
-        if aut == request.user.username:
-            request.user.password
+        aut = data["request_user_id"]
+        if str(aut) == str(request.user.id):
             post = Post()
             post.text = text
             post.author = request.user
@@ -207,7 +207,7 @@ class UserEdit(APIView):
         profpic = data["profile"]
         bio = data["bio"]
         userid = data["userid"]
-        if userid == request.user.id:
+        if str(userid) == str(request.user.id):
             user = get_object_or_404(User, pk=request.user.id)
             user.profile_pic = profpic
             user.bio = bio
@@ -219,19 +219,29 @@ class CreateComment(APIView):
     def post(self, request):
         data = request.data
         text = data["text"]
-        aut = data["author"]
+        aut = data["request_user_id"]
         pk = data["postid"]
-        if aut == request.user.username:
+        if str(aut) == str(request.user.id):
             comment = Comment()
             comment.comment_text = text
             comment.comment_author = request.user
             comment.created_date = timezone.now()
             post = get_object_or_404(Post, pk=pk)
             comment.post = post
-
             comment.save()
             return Response({'detail': 'Success'})
         return Response({'detail': 'No permisson'})
+
+class DeleteComment(APIView):
+    def post(self,request):
+        data = request.data
+        pk = data["commentid"]
+        aut = data["userid"]
+        if str(aut) == str(request.user.id):
+            comment = get_object_or_404(Comment,pk=pk)
+            comment.delete()
+            return Response({"detail","Success"})
+        return Response({"detail","No permission"})
 
 class ChangePassword(APIView):
     def post(self, request):
@@ -244,6 +254,7 @@ class ChangePassword(APIView):
             user.save()
             return Response({'detail': 'Success'})
         return Response({'detail': 'No permisson'})
+
 
 ##not using
 class TestAPI(APIView):
