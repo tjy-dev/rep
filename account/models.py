@@ -137,7 +137,7 @@ def delete_previous_file(function):
 
 class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    text = models.TextField(unique=False)
+    text = models.TextField(unique=False,max_length=200)
     published_date = models.DateTimeField(blank=True, null=True,unique=False)
     #picture = models.ImageField(upload_to=get_image_path, null=True,blank=True,unique=False)
     picture = StdImageField(upload_to=get_image_path,null=True,blank=True,variations={
@@ -171,7 +171,7 @@ class Follow(models.Model):
     created_date = models.DateTimeField(blank=True,null=True)
 
 class Comment(models.Model):
-    comment_text = models.TextField('コメント内容',max_length=250)
+    comment_text = models.TextField('コメント内容',max_length=100)
     post = models.ForeignKey(Post, verbose_name='対象記事', on_delete=models.CASCADE,null=True)
     parent = models.ForeignKey('self', verbose_name='親コメント', null=True, blank=True, on_delete=models.CASCADE)
     comment_author = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=True)

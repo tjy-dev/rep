@@ -2,7 +2,7 @@
 
 from rest_framework import serializers
 
-from .models import User, Post,Comment
+from .models import User, Post,Comment,Follow
 
 from django.utils import timezone
 
@@ -27,3 +27,11 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ('id','comment_text','post','parent','comment_author','created_date',)
+
+class FollowSerializer(serializers.ModelSerializer):
+    follower = UserSerializer()
+    following = UserSerializer()
+    
+    class Meta:
+        model = Follow
+        fields = ('follower','following','created_date',)

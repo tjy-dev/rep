@@ -33,6 +33,7 @@ urlpatterns = [
     path('api/user/detail/',viewsapi.UserDetail.as_view(),name='UserDetailAPI'),
     path('api/comment/create/',viewsapi.CreateComment.as_view(),name='CommentCreateAPI'),
     path('api/comment/delete/',viewsapi.DeleteComment.as_view(),name='DeleteCommentAPI'),
+    path('api/comment/reply/',viewsapi.ReplytoComment.as_view(),name='ReplytoCommentAPI'),
     path('api/user/edit/password/',viewsapi.ChangePassword.as_view(),name='CHangePasswordAPI'),
     path('api/test/',viewsapi.TestAPI.as_view(),name='Test'),
 ]
@@ -52,5 +53,6 @@ router = routers.DefaultRouter()
 router.register(r'users', viewsapi.UserViewSet)
 router.register(r'entries', viewsapi.PostViewSet)
 router.register(r'comments', viewsapi.CommentViewSet)
+router.register(r'follow',viewsapi.FollowViewSet)
 
 

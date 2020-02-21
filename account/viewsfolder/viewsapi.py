@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 
 import django_filters
 from rest_framework import viewsets, filters
-from ..serializer import UserSerializer, PostSerializer,CommentSerializer
+from ..serializer import UserSerializer, PostSerializer,CommentSerializer,FollowSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 
 from rest_framework.permissions import BasePermission 
@@ -74,6 +74,14 @@ class CommentViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         return Comment.objects.order_by('-created_date')
 
+class FollowViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Follow.objects.order_by('-created_date')
+    serializer_class = FollowSerializer
+    filter_fields = ('follower', 'following',)
+    filter_backends = [DjangoFilterBackend]
+
+    def get_queryset(self):
+        return Follow.objects.order_by('-created_date')
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -153,15 +161,8 @@ class UserFollow(APIView):
         else:
             return Response({'detail': 'No permisson'})
 
-class GetFollowList(APIView):
-    def get(self,request):
-        return Response({"Detail":"Success"})
-
 # TODO: List
-## get following list
 ## delete user
-## delete comment
-## reply to comment
 
 class UserDetail(APIView):
     def post(self, request):
@@ -232,11 +233,30 @@ class CreateComment(APIView):
             return Response({'detail': 'Success'})
         return Response({'detail': 'No permisson'})
 
+class ReplytoComment(APIView):
+    def post(self, request):
+        data = request.data
+        text = data["text"]
+        aut = data["request_user_id"]
+        pk = data["postid"]
+        parent = data["parent"]
+        if str(aut) == str(request.user.id):
+            comment = Comment()
+            comment.comment_text = text
+            comment.comment_author = request.user
+            comment.created_date = timezone.now()
+            post = get_object_or_404(Post, pk=pk)
+            comment.post = post
+            comment.parent = parent
+            comment.save()
+            return Response({'detail': 'Success'})
+        return Response({'detail': 'No permisson'})
+
 class DeleteComment(APIView):
     def post(self,request):
         data = request.data
         pk = data["commentid"]
-        aut = data["userid"]
+        aut = data["request_user_id"]
         if str(aut) == str(request.user.id):
             comment = get_object_or_404(Comment,pk=pk)
             comment.delete()
