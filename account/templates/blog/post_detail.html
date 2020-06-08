@@ -1,54 +1,102 @@
 {% extends 'blog/base.html' %}
 
 {% block content %}
-    <div>
-        {% if post.published_date %}
-            <div>
-                {{ post.published_date }}
-            </div>
-        {% endif %}
-        <h2>{{ post.title }}</h2>
-        {% if user.is_authenticated %}
-            {% ifequal abc abcd %}
-                <a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}">edit</a>
-                <a class="btn btn-default" href="{% url 'post_remove' pk=post.pk %}">delete</a>
-            {% else %}
-            {% endifequal %}
-        {% endif %}
-        <br>
+    <div class="post-detail-container">
         {% if post.picture != null and post.picture != blank and post.picture != "" %}
-            <img src='{{ MEDIA_URL }}{{post.picture}}' width=200>
+            <img src='{{ MEDIA_URL }}{{post.picture}}' width=200 class="postdetail-image">
         {% endif %}
-        <p>written by {{ post.author }}</p>
-        <p>{{ post.text|linebreaksbr }}</p>
 
-        <form name="name_form" action="{% url 'post_like' pk=post.pk %}" method="POST">
-            {% csrf_token %}
-            {% if is_like == 1 %}
-                <input id="like" class="on like_button" type="submit" value=""> 
-            {% else %}
-                <input id="like" class="like_button" type="submit" value=""> 
-            {% endif %}
-        </form>
-
-
-        <a href="{% url 'comment_create' pk=post.pk %}">Comment</a><br>
-        {% for comment in comment %}
-            <div class="post-container">
+        <div>
+            <div class = "post-header">
                 <div class="post-account-container">
-                    <a href="{% url 'user_post_list' username=comment.comment_author.username %}">
-                    <img class="post_profile_pic" src="{{MEDIA_URL}}{{comment.comment_author.profile_pic.thumbnail}}">
-                    <a class="post-account" href="{% url 'user_post_list' username=comment.comment_author.username %}">{{ comment.comment_author.username}}</a>
-                    </a>
+                    <a href="{% url 'user_post_list' username=post.author.username %}">
+                        <img class="post_profile_pic" src="{{MEDIA_URL}}{{post.author.profile_pic.thumbnail}}">
+                        <a class="post-account" href="{% url 'user_post_list' username=post.author.username %}">
+                            {{ post.author.username}}
+                        </a>
+                    </a>    
                 </div>
-                 <p class="post-text">
-                    {{ comment.comment_text|linebreaksbr }}
-                </p>
-                <div class="post-date">
-                    {{ comment.created_date }}
+                <div class="post-handler">
+                    <input type="button" value="･･･" onclick="postmenuOpen()" />
                 </div>
             </div>
-        {% endfor %}
+
+
+            {% if user.is_authenticated %}
+                {% ifequal abc abcd %}
+                    <div class="post-menu" id="postmenu"> 
+                        <div class="post-menu-content">
+                            <a class="btn" href="{% url 'post_edit' pk=post.pk %}">Edit</a>
+                        </div>
+                        <div class="post-menu-content">
+                            <a class="btn" href="{% url 'post_remove' pk=post.pk %}">Delete</a>
+                        </div>
+                        
+                    </div>
+                {% else %}
+                {% endifequal %}
+            {% endif %}
+
+
+
+            <div class="postdetail-p-container">
+                <p>{{ post.text|linebreaksbr }}</p>
+            </div>
+
+            
+            <div class="postdetail-postdate">
+                {% if post.published_date %}
+                    <div>
+                        {{ post.published_date }}
+                    </div>
+                {% endif %}
+            </div>
+            
+
+            <div class="reaction-controller">
+
+                <form name="name_form" action="{% url 'post_like' pk=post.pk %}" method="POST">
+                    {% csrf_token %}
+                    {% if is_like == 1 %}
+                        <input id="like" class="on like_button" type="submit" value=""> 
+                    {% else %}
+                        <input id="like" class="like_button" type="submit" value=""> 
+                    {% endif %}
+                </form>
+
+                <div class="comment-button">
+                    <a href="{% url 'comment_create' pk=post.pk %}">Comment</a>
+                </div>
+
+            </div>
+            
+
+            
+
+
+            <div class="comments-bigcontainer">
+            {% for comment in comment %}
+                <div class="comment-container">
+                    <div class="post-account-container">
+                        <a href="{% url 'user_post_list' username=comment.comment_author.username %}">
+                        <img class="post_profile_pic" src="{{MEDIA_URL}}{{comment.comment_author.profile_pic.thumbnail}}">
+                        <a class="post-account" href="{% url 'user_post_list' username=comment.comment_author.username %}">{{ comment.comment_author.username}}</a>
+                        </a>
+                    </div>
+                    <p class="post-text">
+                        {{ comment.comment_text|linebreaksbr }}
+                    </p>
+                    <div class="post-date">
+                        {{ comment.created_date }}
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+        
+        </div>
+
+
+            
     </div>
 
 
@@ -72,6 +120,24 @@
               }
             })
         });
+
+        
     </script>
     {% endif %}
+
+    <script>
+        document.getElementById("postmenu").style.display = "none";
+        function postmenuOpen(){
+            const menu = document.getElementById("postmenu");
+
+            if(menu.style.display == "none") {
+                menu.style.display = "flex";
+            } else {
+                menu.style.display = "none";
+            }
+
+        }
+    
+    </script>
+
 {% endblock %}

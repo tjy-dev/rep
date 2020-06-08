@@ -12,7 +12,6 @@ from django.http.response import JsonResponse
 
 import os
 
-
 def user_post_list(request,username):
     person = get_object_or_404(User, username=username)
     posts = Post.objects.filter(author=person,published_date__lte=timezone.now()).order_by('-published_date')

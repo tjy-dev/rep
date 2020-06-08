@@ -136,8 +136,8 @@ def delete_previous_file(function):
     return wrapper
 
 class Post(models.Model):
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    text = models.TextField(unique=False,max_length=200)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,blank=False)
+    text = models.TextField(unique=False,max_length=200,)
     published_date = models.DateTimeField(blank=True, null=True,unique=False)
     #picture = models.ImageField(upload_to=get_image_path, null=True,blank=True,unique=False)
     picture = StdImageField(upload_to=get_image_path,null=True,blank=True,variations={

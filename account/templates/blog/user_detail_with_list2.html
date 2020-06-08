@@ -2,26 +2,11 @@
 {% load static %}
 
 {% block content %}
-
-    <div class="profile-block">
         {% if user.profile_pic != null and user.profile_pic != blank and user.profile_pic != "" %}
             <img src='{{ MEDIA_URL }}{{user.profile_pic.thumbnail}}' class = 'profile-image-info'>
         {% endif %}
-
-        <div class="profile-texts">
-            <p class="profile-username">{{ user.username }}</p>
-            <p class="profile-birthdate">誕生日: {{ user.date_of_birth }}</p>
-            <p class="profile-bio">{{ user.bio }}</p>
-
-
-        </div>
-
-    </div>
-
-
-        
-        
-        
+        <p>{{ user.username }}, {{ user.email }}, {{ user.date_of_birth }}</p>
+        {{ user.bio }}<br><br>
         <a href="{% url 'edit_user' %}">Change Info</a><br> 
         <a href="{% url 'edit_password' %}">Chage Password</a><br>
         <a href="{% url 'logout'%}">Log out</a><br>

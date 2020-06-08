@@ -1,0 +1,617 @@
+html {
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+    width: 100%;
+}
+
+body {
+    font-family: "Avenir", "YuGothic";
+    background-color: #fafafa;
+    margin: 0;
+    
+}
+
+
+
+
+
+
+
+
+
+/* HEADER */
+
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #ffffff;
+    border-bottom: 0.05em solid #aaaaaa;
+    padding: 0.7em;
+    margin: 0;
+}
+
+.header-item2 {
+    flex-grow: 2;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.header-username {
+    margin-inline-end: 0.5em;
+}
+
+.header-logo:link, :visited, :hover, :active {
+    font-size: 2em;
+    font-weight: lighter;
+    color: #707070;
+}
+
+
+
+
+
+
+
+
+
+/* NAVIBAR */
+
+.navibar-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    position: fixed;
+    height: 3.5em;
+    width: 85%;
+    left: 7.5%;
+    bottom: 1em;
+    background-color: #ebebeb;
+    z-index: 100;
+    border-radius: 1.75em;
+    box-shadow: 7px 7px 20px rgba(0, 0, 0, 0.2);
+    
+
+
+}
+
+@media screen and (min-width: 500px) {
+    
+    .navibar-container{
+        width: calc(500px * 0.85);
+        left: calc((100% - 500px * 0.85)/2);
+    }
+}
+
+.navibar-button {
+    text-align: center;
+    height: 2em;
+    width: 2em;
+    background-color: #efefef;
+    box-shadow: 8px 8px 16px #cfcfcf,
+                -8px -8px 16px #ffffff;
+    border-radius: 1em;
+}
+
+
+.navibar-button a {
+    display: block;
+    height: 100%;
+    width: 100%;
+    z-index: 120
+}
+
+.bottom-spacer {
+    display: block;
+    width: 100%;
+    height: 6em;
+}
+
+#navibar-1 {
+    background-image: url("/media/DefaultImages/button/button_home_line.png");
+    background-size: cover;
+}
+
+#navibar-2 {
+    background-image: url("/media/DefaultImages/button/button_glass_line.png");
+    background-size: cover;
+}
+
+#navibar-3 {
+    background-image: url("/media/DefaultImages/button/button_plus_line.png");
+    background-size: cover;
+}
+
+#navibar-4 {
+    background-image: url("/media/DefaultImages/button/button_bell_line.png");
+    background-size: cover;
+}
+
+#navibar-5 {
+    background-image: url("/media/DefaultImages/button/button_person_line.png");
+    background-size: cover;
+}
+
+
+
+
+
+
+
+
+
+/* BASIC COMPONENTS */
+/* these are not used, maybe */
+
+.new_post_button {
+    position: fixed;
+    bottom: 10%;
+}
+
+a {
+    text-decoration: none
+}
+
+a:hover {
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+
+
+
+.button {
+    color: #fdfdfd;
+    background-color: #56739b;
+    font-weight: 600;
+    font-size: 1em;
+    display: inline-block;
+    position: relative;
+    margin: auto;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+    padding-left: 1em;
+    padding-right: 1em;
+    border-radius: 1em;
+    
+}
+
+.button:hover {
+    background-color: #7495C3;
+    font-weight: 600;
+    
+}
+
+
+
+.button-container {
+    text-align: center;
+    margin: 1.5rem;
+}
+
+
+
+.normal-container {
+    text-align: center;
+    padding: 1.5rem;
+    margin: 0.7rem;
+    background-color: #ebebeb;
+    border-radius: 1rem;
+    
+}
+
+.big-message {
+    color: #505050;
+    font-size: 1.5em;
+    
+}
+
+.small-link {
+    color: #56739b;
+    display: inline-block;
+    padding: 0.2em 0.5em 0.2em 0.5em;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
+
+.small-link:hover {
+    background-color: #deeaf0;
+    border-radius: 1em;
+}
+
+
+
+
+
+
+
+
+
+/* TIMELINE */
+
+.line-container {
+    text-align: center;
+    margin: 0 auto;
+}
+@media screen and (min-width: 400px) {
+    
+    .post-container {
+        width: calc(400px - 3.5em);
+    }
+}
+
+
+    /* TIMELINE COMPONENTS */
+
+.post-container {
+    display: inline-block;
+    position: relative;
+    text-align: left;
+    padding: 0.8rem;
+    margin: 1.5rem 0.7rem;
+    background-color: #efefef;
+    border-radius: 1.5rem;
+    box-shadow: 8px 8px 16px #cfcfcf,
+                -8px -8px 16px #ffffff;
+    transition: all 0.2s ease 0s;
+}
+
+.post-container:hover {
+    position: relative;
+    box-shadow: 4px 4px 8px #cfcfcf,
+                -4px -4px 8px #ffffff;
+    background-color: #efefef;
+    
+}
+
+
+.post-account-container {
+    position: relative;
+    margin: 0em 0em 0.7em 0.2em;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    z-index: 10;
+}
+
+
+.post-account {
+    color: #444444;
+    font-size: 1em;
+    font-weight: 500;
+    margin-inline-start: 0.7em;
+}
+.post-account:hover {
+    font-weight: 500;
+}
+
+
+.post_profile_pic {
+    width: 2em;
+    border-radius: 1em;
+}
+
+
+.post-image {
+    width: 100%;
+    border-radius: 1rem;
+}
+
+
+.post-text {
+    color: #404040;
+    font-size: 1em;
+    line-height: 1.7em;
+    overflow-wrap: break-word;
+}
+
+
+.post-date {
+    color: #707070;
+    font-size: 0.8em;
+    text-align: right;
+    
+}
+
+
+.post-container .post-clicklayer {
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+
+}
+
+
+.profile-image {
+    width: 30;
+    border-radius: 1rem;
+}
+
+
+.profile-image-info {
+    width: 70;
+    border-radius: 200rem;
+}
+
+
+
+
+
+
+
+
+
+/* POST DETAIL */
+
+@media screen and (min-width: 500px) {
+    
+    .post-detail-container {
+        display: inline-block;
+        width: 500px;
+        text-align: center;
+    }
+}
+
+
+.postdetail-image {
+    width: 100%;
+
+}
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem 0.5rem 1rem 0.5rem;
+
+}
+
+.post-handler{
+    margin: 0.2rem 0.5rem 0rem 0.5rem;
+
+}
+
+.post-menu{
+    display: flex;
+    flex-direction: column;
+    position: absolute ;
+    width: auto;
+    right: 0.7em;
+    padding: 0.5em;
+    border-radius: 0.3em;
+    background: #fff;
+    box-shadow: 0px 10px 50px rgba(0, 0, 0, 0.2);
+}
+
+.post-menu div{
+    padding: 0.2em 1em 0.2em 1em ;
+}
+
+.post-menu div:hover{
+    padding: 0.2em 1em 0.2em 1em ;
+    background: #ccc;
+}
+
+
+
+.postdetail-p-container {
+    margin: 1rem 0.7rem 1rem 0.7rem;
+}
+
+.postdetail-p-container p {
+    text-align: left;
+}
+
+.postdetail-postdate {
+    text-align: right;
+    margin-inline-end: 0.7em;
+    font-size: 0.75rem;
+    color: #888888;
+
+}
+
+
+
+.reaction-controller {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 1rem 0.5rem 1rem 0.5rem;
+
+}
+
+.comment-button {
+    display: inline-block;
+    border-radius: 0.75em;
+    height: 1.5em;
+    background: #eeeeee;
+    padding: 0.5em;
+}
+
+.comments-bigcontainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-container {
+    display: inline-block;
+    position: relative;
+    text-align: left;
+    
+    padding: 0.8rem;
+    margin: 1.5rem 0.7rem 1.5rem 1.5rem;
+    transition: all 0.2s ease 0s;
+}
+
+.comment-container:after {
+    position: absolute;
+    top: 0.5rem;
+    left: -0.7em;
+    display: inline-block;
+    content: " ";
+    height: calc(100% - 1rem);
+    background: #dddddd;
+    border-radius: 0.25em;
+    width: 0.5em;
+
+}
+
+
+
+
+.like_button {
+    display       : inline-block;
+    border-radius : 50%;          /* 角丸       */
+    font-size     : 18pt;        /* 文字サイズ */
+    text-align    : center;      /* 文字位置   */
+    cursor        : pointer;     /* カーソル   */
+    width:  1.5em;
+    height: 1.5em;
+    background    : rgba(1, 1, 1, 0.0);     /* 背景色     */
+    color         : #000000;     /* 文字色     */
+    line-height   : 1em;         /* 1行の高さ  */
+    transition    : .3s;         /* なめらか変化 */
+    /*box-shadow    : 6px 6px 3px #666666;  /* 影の設定 */
+    border        : 2px solid #888888;    /* 枠の指定 */
+    border-radius: 200rem;
+}
+
+.like_button.on {
+    display       : inline-block;
+    border-radius : 50%;          /* 角丸       */
+    font-size     : 18pt;        /* 文字サイズ */
+    text-align    : center;      /* 文字位置   */
+    cursor        : pointer;     /* カーソル   */
+    width:  1.5em;
+    height: 1.5em;
+    background    : rgb(173, 19, 78);     /* 背景色     */
+    color         : #ffffff;     /* 文字色     */
+    line-height   : 1em;         /* 1行の高さ  */
+    transition    : .3s;         /* なめらか変化 */
+    /*box-shadow    : 6px 6px 3px #666666;  /* 影の設定 */
+    border        : 2px solid rgb(173, 19, 78);    /* 枠の指定 */
+    border-radius: 200rem;
+}
+
+.like_button:hover {
+    box-shadow    : none;        /* カーソル時の影消去 */
+    background    : #ffffff;     /* 　背景色     */
+}
+
+.like_button.on:hover {
+    box-shadow    : none;        /* カーソル時の影消去 */
+    background    : rgb(173, 19, 78);     /* 背景色     */
+}
+
+
+.follow_button {
+    display       : inline-block;
+    border-radius : 50%;          /* 角丸       */
+    font-size     : 18pt;        /* 文字サイズ */
+    text-align    : center;      /* 文字位置   */
+    cursor        : pointer;     /* カーソル   */
+    width:  150px;
+    height: 50px;
+    background    : rgba(1, 1, 1, 0.0);     /* 背景色     */
+    color         : #000000;     /* 文字色     */
+    line-height   : 1em;         /* 1行の高さ  */
+    transition    : .3s;         /* なめらか変化 */
+    /*box-shadow    : 6px 6px 3px #666666;  /* 影の設定 */
+    border        : 2px solid #888888;    /* 枠の指定 */
+    border-radius: 200rem;
+}
+
+.follow_button.on {
+    display       : inline-block;
+    border-radius : 50%;          /* 角丸       */
+    font-size     : 18pt;        /* 文字サイズ */
+    text-align    : center;      /* 文字位置   */
+    cursor        : pointer;     /* カーソル   */
+    width:  150px;
+    height: 50px;
+    background    : rgb(173, 19, 78);     /* 背景色     */
+    color         : #ffffff;     /* 文字色     */
+    line-height   : 1em;         /* 1行の高さ  */
+    transition    : .3s;         /* なめらか変化 */
+    /*box-shadow    : 6px 6px 3px #666666;  /* 影の設定 */
+    border        : 2px solid rgb(173, 19, 78);    /* 枠の指定 */
+    border-radius: 200rem;
+}
+
+.follow_button:hover {
+    box-shadow    : none;        /* カーソル時の影消去 */
+    background    : #ffffff;     /* 　背景色     */
+}
+
+.follow_button.on:hover {
+    box-shadow    : none;        /* カーソル時の影消去 */
+    background    : rgb(173, 19, 78);     /* 背景色     */
+}
+
+
+
+
+
+
+
+
+
+
+/* PROFILE */
+/* ここ作業途中だったようです */
+
+.profile-block {
+    margin: 2em 1.2em 0em 1.2em;
+
+}
+
+.profile-image-info {
+    width: 6em;
+    border-radius: 200rem;
+    margin: 1em;
+}
+
+.profile-texts {
+    text-align: left;
+}
+
+.profile-texts > p {
+    margin: 0.3rem 0;
+}
+
+.profile-username {
+    font-size: 1.4rem;
+    font-weight: 500;
+}
+
+.profile-birthdate {
+    font-size: 0.8rem;
+    color: #707070;
+}
+
+.profile-bio {
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -96,7 +96,7 @@ class PostDelete(APIView):
         pk = data["id"]
         userid = data["request_user_id"]
         post = get_object_or_404(Post, pk=pk)
-
+        
         if str(userid) == str(request.user.id):
             if delete == "true":
                 if request.user == post.author:
@@ -192,6 +192,7 @@ class PostCreate(APIView):
         text = data["text"]
         pic = data["picture"]
         aut = data["request_user_id"]
+        print("hello!!!!")
         if str(aut) == str(request.user.id):
             post = Post()
             post.text = text
@@ -288,9 +289,28 @@ class TestAPI(APIView):
         snippets = Post.objects.filter(Q(author__in=a) | Q(author=request.user))
         serializer = PostSerializer(snippets, many=True)
         data = serializer.data
-        data.append({"helllllllllllo":"are you here"})
+        data.append({"data":"are you here"})
         return Response(data)
 
     def post(self, request):
         return Response({'sucsess':'True'})
 
+
+
+from django.conf import settings
+import os
+import uuid
+import json as JSON
+class MyAPI(APIView):
+    def post(self, request):
+        data = request.data
+        
+        json = data['data']
+        answ = JSON.loads(json)
+
+        name = str(uuid.uuid4()).replace('-', '')
+        path = settings.MEDIA_ROOT + '/json/' + name + 'file.json'
+
+        with open(path, 'w') as f:
+            print(answ, file=f)
+        return Response({'sucsess':'True'})

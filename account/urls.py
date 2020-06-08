@@ -21,8 +21,8 @@ urlpatterns = [
     path('accounts/done', views.user_create_temp.as_view(), name='user_create_done'),
     path('accounts/complete/<token>/', views.user_create_complete.as_view(), name='user_create_complete'),
 
-    path('<username>',views.user_post_list,name='user_post_list'),
-    path('<username>/follow',views.user_follow,name='user_follow'),
+    path('user/<username>',views.user_post_list,name='user_post_list'),
+    path('user/<username>/follow',views.user_follow,name='user_follow'),
 
     path('api/obtain_token/', auth_views.obtain_auth_token),
     path('api/posts/delete/',viewsapi.PostDelete.as_view(),name='PostDelete'),
@@ -36,8 +36,9 @@ urlpatterns = [
     path('api/comment/reply/',viewsapi.ReplytoComment.as_view(),name='ReplytoCommentAPI'),
     path('api/user/edit/password/',viewsapi.ChangePassword.as_view(),name='CHangePasswordAPI'),
     path('api/test/',viewsapi.TestAPI.as_view(),name='Test'),
-]
+    path('api/json/',viewsapi.MyAPI.as_view(),name='TESTFORNOTTHING'),
 
+]
 
 # 画像用
 from django.conf import settings

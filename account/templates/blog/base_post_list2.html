@@ -13,7 +13,12 @@
             <img src='{{ MEDIA_URL }}{{post.picture}}' class="post-image">
         {% endif %}
 
-        
+        <p class="post-text">
+            {{ post.text|linebreaksbr }}
+        </p>
+        <div class="post-date">
+            {{ post.published_date }}
+        </div>
         <a class="post-clicklayer" href="{% url 'post_detail' pk=post.pk %}"></a>
     </div>
 {% endfor %}
